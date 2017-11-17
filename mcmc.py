@@ -41,6 +41,7 @@ class AdaptiveMetropolisHastings(MetropolisHastings):
 	def __init__(self, p, x0, sigma=1):
 		super().__init__(p, x0, q=self.proposal)
 		self.sigma = sigma
+		self.sigma_scale = 1
 		self.target_acceptance = 0.234 # optimal acceptance rate as d -> infinity
 		# self.target_acceptance = 0.44 # optimal acceptance rate for d=1
 		self.factor = 1
@@ -49,11 +50,13 @@ class AdaptiveMetropolisHastings(MetropolisHastings):
 	def accept(self, x):
 		val = super().accept(x)
 		if val:
+			self.sigma_scale *= math.exp((1 - self.target_acceptance) * self.factor)
 			if isinstance(self.sigma, list):
 				self.sigma = [s * math.exp((1 - self.target_acceptance) * self.factor) for s in self.sigma]
 			else:
 				self.sigma *= math.exp((1 - self.target_acceptance) * self.factor)
 		else:
+			self.sigma_scale /= math.exp(self.target_acceptance * self.factor)
 			if isinstance(self.sigma, list):
 				self.sigma = [s / math.exp(self.target_acceptance * self.factor) for s in self.sigma]
 			else:

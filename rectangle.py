@@ -34,8 +34,8 @@ class RectangleFit(object):
 			(0, np.array(self.image.shape[:2])), # pt0
 			(0, np.array(self.image.shape[:2])), # pt1
 			(0, 256), # color
-			(2, np.sum(self.image.shape[:2])), # line width
-			(0.1, 0.75), # opacity
+			tuple(np.array([0.02, 0.25]) * np.sum(self.image.shape[:2])), # line width
+			(0.25, 0.75), # opacity
 		]
 
 	def dim_scale(self):

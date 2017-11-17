@@ -12,7 +12,7 @@ def infer(mcmc_cls, model, n, show_interval=500, burnin=1000):
 	for i in range(n):
 		samples.append(mcmc.sample())
 		if len(samples) % show_interval == 0:
-			print(mcmc.acceptance_rate(), model.distance(samples[-1])[0], mcmc.sigma)
+			print('a:', mcmc.acceptance_rate(), 'sigma:', mcmc.sigma_scale, 'd:', model.distance(samples[-1])[0])
 			image, valid = model.make_image(samples[-1])
 			cv2.imshow('%d steps' % len(samples), np.hstack((image, model.image)))
 			cv2.waitKey(0)
