@@ -1,3 +1,4 @@
+import copy
 import math
 import random
 
@@ -7,15 +8,13 @@ import numpy as np
 class MetropolisHastings(object):
 	def __init__(self, p, x0, q=None, sigma=1, use_log=False):
 		if q is None:
-			def proposal(x):
-				if isinstance(x, list):
-					return [proposal(xi) for xi in x]
-				return np.random.normal(loc=x, scale=sigma)
-			self.q = proposal
+			self.q = self.proposal
 		else:
 			self.q = q
 		self.p = p
 		self.x = x0
+		self.sigma = sigma
+		self.sigma_scale = 1
 		self.use_log = use_log
 		self.accepted = 0
 		self.rejected = 0
@@ -33,8 +32,21 @@ class MetropolisHastings(object):
 			self.rejected += 1
 			return False
 
-	def sample(self):
-		x = self.q(self.x)
+	def proposal(self, x, sigma=None):
+		if isinstance(x, list):
+			if x and not isinstance(x[0], list) and isinstance(self.sigma, list):
+				return [self.proposal(xi, sigma=s) for xi, s in zip(x, self.sigma)]
+			return [self.proposal(xi) for xi in x]
+		if sigma is None:
+			sigma = self.sigma
+		return np.random.normal(loc=x, scale=sigma)
+
+	def sample(self, index=None):
+		if isinstance(self.x, list) and index is not None:
+			x = copy.deepcopy(self.x)
+			x[index] = self.q(self.x[index])
+		else:
+			x = self.q(self.x)
 		self.accept(x)
 		return self.x
 
@@ -43,9 +55,7 @@ class MetropolisHastings(object):
 
 class AdaptiveMetropolisHastings(MetropolisHastings):
 	def __init__(self, p, x0, sigma=1, use_log=False):
-		super().__init__(p, x0, q=self.proposal, use_log=use_log)
-		self.sigma = sigma
-		self.sigma_scale = 1
+		super().__init__(p, x0, q=self.proposal, sigma=sigma, use_log=use_log)
 		self.target_acceptance = 0.234 # optimal acceptance rate as d -> infinity
 		# self.target_acceptance = 0.44 # optimal acceptance rate for d=1
 		self.factor = 1
@@ -67,15 +77,6 @@ class AdaptiveMetropolisHastings(MetropolisHastings):
 				self.sigma /= math.exp(self.target_acceptance * self.factor)
 		self.factor *= (1/2) ** (1 / self.factor_halflife)
 		return val
-
-	def proposal(self, x, sigma=None):
-		if isinstance(x, list):
-			if isinstance(self.sigma, list):
-				return [self.proposal(xi, sigma=s) for xi, s in zip(x, self.sigma)]
-			return [self.proposal(xi) for xi in x]
-		if sigma is None:
-			sigma = self.sigma
-		return np.random.normal(loc=x, scale=sigma)
 
 def visualize(cls, p, x0, n, burnin=1000):
 	'''Visualization for a 1d state space.'''

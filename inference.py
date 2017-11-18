@@ -1,3 +1,5 @@
+import random
+
 import cv2
 import numpy as np
 
@@ -10,7 +12,7 @@ def infer(mcmc_cls, model, n, show_interval=500, burnin=1000):
 		mcmc.sample()
 	samples = []
 	for i in range(n):
-		samples.append(mcmc.sample())
+		samples.append(mcmc.sample(index=random.randrange(model.n)))
 		if len(samples) % show_interval == 0:
 			print('a:', mcmc.acceptance_rate(), 'sigma:', mcmc.sigma_scale, 'd:', model.distance(samples[-1])[0])
 			image, penalty = model.make_image(samples[-1])
