@@ -31,8 +31,8 @@ class RectangleFit(object):
 
 	def range(self):
 		return [
-			(0, np.array(self.image.shape[:2])), # pt0
-			(0, np.array(self.image.shape[:2])), # pt1
+			(0, np.array(self.image.shape[:2])[::-1]), # pt0
+			(0, np.array(self.image.shape[:2])[::-1]), # pt1
 			(0, 256), # color
 			tuple(np.array([0.02, 0.125]) * np.sum(self.image.shape[:2])), # line width
 			(0.1, 0.5), # opacity
