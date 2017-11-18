@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 class MetropolisHastings(object):
-	def __init__(self, p, x0, q=None, sigma=1):
+	def __init__(self, p, x0, q=None, sigma=1, use_log=False):
 		if q is None:
 			def proposal(x):
 				if isinstance(x, list):
@@ -16,11 +16,15 @@ class MetropolisHastings(object):
 			self.q = q
 		self.p = p
 		self.x = x0
+		self.use_log = use_log
 		self.accepted = 0
 		self.rejected = 0
 
 	def accept(self, x):
-		alpha = self.p(x) / self.p(self.x)
+		if self.use_log:
+			alpha = math.exp(self.p(x) - self.p(self.x))
+		else:
+			alpha = self.p(x) / self.p(self.x)
 		if alpha > random.random():
 			self.x = x
 			self.accepted += 1
@@ -38,8 +42,8 @@ class MetropolisHastings(object):
 		return self.accepted / (self.accepted + self.rejected)
 
 class AdaptiveMetropolisHastings(MetropolisHastings):
-	def __init__(self, p, x0, sigma=1):
-		super().__init__(p, x0, q=self.proposal)
+	def __init__(self, p, x0, sigma=1, use_log=False):
+		super().__init__(p, x0, q=self.proposal, use_log=use_log)
 		self.sigma = sigma
 		self.sigma_scale = 1
 		self.target_acceptance = 0.234 # optimal acceptance rate as d -> infinity

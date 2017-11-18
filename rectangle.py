@@ -42,33 +42,35 @@ class RectangleFit(object):
 		return [x_max - x_min for x_min, x_max in self.range()]
 
 	def distance(self, x):
-		generated, valid = self.make_image(x)
+		generated, penalty = self.make_image(x)
 		distance = np.mean(np.abs(generated - self.image))
-		return distance, valid
+		return distance, penalty / self.n
 
-	def p(self, x):
-		distance, valid = self.distance(x)
-		score = math.exp(-distance)
-		return score if valid else 0
+	def log_p(self, x):
+		c_penalty = 100
+		distance, penalty = self.distance(x)
+		score = -distance-c_penalty*penalty
+		return score
 
 	def make_image(self, x):
 		image = np.full_like(self.image, 255)
-		valid_all = True
+		penalty_total = 0
 		for rect in x:
-			image, valid = self.draw(image, rect)
-			valid_all &= valid
-		return image, valid
+			image, penalty = self.draw(image, rect)
+			penalty_total += penalty
+		return image, penalty_total
 
 	def draw(self, image, rect):
-		valid_all = True
+		penalty_total = 0
 
 		rect_clipped = []
 		for val, bounds in zip(rect, self.range()):
-			val, valid = self.clip(val, *bounds)
+			val, penalty = self.clip(val, *bounds)
 			rect_clipped.append(val)
-			valid_all &= valid
+			penalty_total += penalty
 		pt0, pt1, color, width, opacity = rect_clipped
 
+		# color = cv2.cvtColor(color.astype(np.uint8)[None,None,...], cv2.COLOR_HSV2BGR)[0,0].astype(float)
 		pt0 = (pt0 * (1 << self.BITSHIFT)).astype(int)
 		pt1 = (pt1 * (1 << self.BITSHIFT)).astype(int)
 		width = int(width[0])
@@ -77,34 +79,30 @@ class RectangleFit(object):
 		image = image.copy()
 		overlay = image.copy()
 		cv2.line(overlay, tuple(pt0), tuple(pt1), tuple(color), width, lineType=cv2.LINE_AA, shift=self.BITSHIFT)
-		return cv2.addWeighted(overlay, opacity, image, 1 - opacity, 0), valid_all
+		return cv2.addWeighted(overlay, opacity, image, 1 - opacity, 0), penalty_total
 
 	@staticmethod
 	def clip(a, a_min, a_max):
-		valid = True
-		if a_min is not None and np.any(a < a_min):
-			valid = False
-		if a_max is not None and np.any(a >= a_max):
-			valid = False
-		return np.clip(a, a_min, a_max), valid
+		penalty = np.sum(np.maximum(0, np.maximum(a_min - a, a - a_max)) / (a_max - a_min))
+		return np.clip(a, a_min, a_max), penalty
 
 if __name__ == '__main__':
 	image = cv2.imread('images/starry.jpg')
 	fit = RectangleFit(8, image)
-	img = fit.make_image([
+	img, _ = fit.make_image([
 		[
 			np.array([0,0], dtype=float), # pt0
 			np.array([200,200], dtype=float), # pt1
 			np.array([255,55,55], dtype=float), # color
-			5, # line width
-			0.5, # opacity
+			np.array([5]), # line width
+			np.array([0.5]), # opacity
 		],
 		[
 			np.array([80,40], dtype=float), # pt0
 			np.array([20,200], dtype=float), # pt1
 			np.array([55,55,255], dtype=float), # color
-			40, # line width
-			0.5, # opacity
+			np.array([40]), # line width
+			np.array([0.5]), # opacity
 		],
 	])
 	cv2.imshow('', img)
