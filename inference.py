@@ -25,7 +25,7 @@ if __name__ == '__main__':
 	image = cv2.imread('images/beach.png')
 
 	# model = RectangleFit(8, image)
-	# mcmc = AdaptiveMetropolisHastings(model.p, model.x0())
+	# mcmc = AdaptiveMetropolisHastings(model.log_p, model.x0(), use_log=True)
 	# for i in range(1000):
 		# mcmc.sample()
 	# image, _ = model.make_image(mcmc.sample())
