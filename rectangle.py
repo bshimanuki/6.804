@@ -47,9 +47,11 @@ class RectangleFit(object):
 		return distance, penalty / self.n
 
 	def log_p(self, x):
-		c_distance = 2
-		c_penalty = 100
+		c_distance = 5
+		c_penalty = 200
 		distance, penalty = self.distance(x)
+		if random.random() < 0.01:
+			print(distance, penalty)
 		score = -c_distance*distance-c_penalty*penalty
 		return score
 

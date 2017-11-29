@@ -1,1 +1,30 @@
+/plots
+
 *.pyc
+
+# Paper
+*.pdf
+
+# LaTeX compiled files
+*.aux
+*.bbl
+*.blg
+*.brf
+*.fdb_latexmk
+*.fls
+*.idx
+*.ilg
+*.ind
+*.lof
+*.log
+*.lol
+*.lot
+*.out
+*.pre
+*.synctex.gz
+*.synctex.gz(busy)
+*.toc
+*.x.gnuplot
+
+# Swap files
+*.sw?
