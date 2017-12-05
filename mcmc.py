@@ -89,11 +89,13 @@ def visualize(cls, p, x0, n, sigma=None, f_range=None, burnin=1000, num_bins=20,
 	samples = []
 	for i in range(n):
 		samples.append(mcmc.sample())
+	plt.figure(figsize=(5,3))
 	plt.hist(samples, bins=num_bins, normed=1, alpha=0.5)
 	plt.xlabel('$x$')
 	plt.ylabel('$P(x)$')
 	if title is not None:
-		plt.title(title)
+		pass
+		# plt.title(title)
 	if f_range is not None:
 		x_min, x_max = f_range
 		dx = (x_max-x_min)/100
@@ -105,7 +107,7 @@ def visualize(cls, p, x0, n, sigma=None, f_range=None, burnin=1000, num_bins=20,
 		print(mcmc.acceptance_rate())
 		plt.show()
 	else:
-		plt.savefig(save)
+		plt.savefig(save, bbox_inches='tight')
 	plt.clf()
 
 def make_peaks(l):
