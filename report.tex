@@ -45,6 +45,69 @@ The main results will be to compare Metropolis-Hastings both with and without ad
 	\label{fig:peaks}
 \end{figure}
 
+\begin{figure}[h]
+	\centering
+	\begin{tabular}{lcc}
+		Step & Nonadaptive & Adaptive \\[1em]
+		500
+		& \includegraphics[valign=m,width=1in]{generated/beach_500.png}
+		& \includegraphics[valign=m,width=1in]{generated/beach_adaptive_500.png}
+		\\[4em]
+		1000
+		& \includegraphics[valign=m,width=1in]{generated/beach_1000.png}
+		& \includegraphics[valign=m,width=1in]{generated/beach_adaptive_1000.png}
+		\\[4em]
+		2000
+		& \includegraphics[valign=m,width=1in]{generated/beach_2000.png}
+		& \includegraphics[valign=m,width=1in]{generated/beach_adaptive_2000.png}
+		\\[4em]
+		3000
+		& \includegraphics[valign=m,width=1in]{generated/beach_3000.png}
+		& \includegraphics[valign=m,width=1in]{generated/beach_adaptive_3000.png}
+		\\[4em]
+		4000
+		& \includegraphics[valign=m,width=1in]{generated/beach_4000.png}
+		& \includegraphics[valign=m,width=1in]{generated/beach_adaptive_4000.png}
+		\\[4em]
+		5000
+		& \includegraphics[valign=m,width=1in]{generated/beach_5000.png}
+		& \includegraphics[valign=m,width=1in]{generated/beach_adaptive_5000.png}
+		\\[4em]
+		Target
+		& \multicolumn{2}{c}{\includegraphics[valign=m,width=1in]{images/beach.png}}
+	\end{tabular}
+	\caption{Progression using adaptive and nonadaptive MH}
+	\label{fig:steps}
+\end{figure}
+
+\begin{figure}[h]
+	\centering
+	\begin{tabular}{ccc}
+		Target & Nonadaptive & Adaptive \\[1em]
+		\includegraphics[valign=m,width=1in]{images/beach.png}
+		& \includegraphics[valign=m,width=1in]{generated/beach_2000.png}
+		& \includegraphics[valign=m,width=1in]{generated/beach_adaptive_2000.png}
+		\\[4em]
+		\includegraphics[valign=m,width=1in]{images/rectangles.png}
+		& \includegraphics[valign=m,width=1in]{generated/rectangles_2000.png}
+		& \includegraphics[valign=m,width=1in]{generated/rectangles_adaptive_2000.png}
+		\\[4em]
+		\includegraphics[valign=m,width=1in]{images/blue.png}
+		& \includegraphics[valign=m,width=1in]{generated/blue_2000.png}
+		& \includegraphics[valign=m,width=1in]{generated/blue_adaptive_2000.png}
+		\\[4em]
+		\includegraphics[valign=m,width=1in]{images/starry.jpg}
+		& \includegraphics[valign=m,width=1in]{generated/starry_2000.png}
+		& \includegraphics[valign=m,width=1in]{generated/starry_adaptive_2000.png}
+		\\[4em]
+		\includegraphics[valign=m,width=1in]{images/sunday.jpg}
+		& \includegraphics[valign=m,width=1in]{generated/sunday_2000.png}
+		& \includegraphics[valign=m,width=1in]{generated/sunday_adaptive_2000.png}
+	\end{tabular}
+	\caption{Results of adaptive and nonadaptive MH after 2000 steps}
+	\label{fig:output}
+\end{figure}
+
 \nocite{*}
 \bibliographystyle{acm}
 \bibliography{bibliography}

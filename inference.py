@@ -56,5 +56,5 @@ if __name__ == '__main__':
 			image = cv2.imread('images/%s.jpg' % image_name)
 		assert image is not None
 		model = RectangleFit(8, image)
-		infer(AdaptiveMetropolisHastings, model, n=10000, show_interval=None, sigma_scale=0.05, saveas=image_name+'_adaptive')
-		infer(MetropolisHastings, model, n=10000, show_interval=None, sigma_scale=0.05, saveas=image_name)
+		infer(AdaptiveMetropolisHastings, model, n=5000, sigma_scale=0.05, saveas=image_name+'_adaptive')
+		infer(MetropolisHastings, model, n=5000, sigma_scale=0.05, saveas=image_name)
