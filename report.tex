@@ -9,13 +9,30 @@
 
 \begin{abstract}
 
-I will be implementing an online-adaptive MCMC algorithm in order to infer a matching set of rectangles to an observed image. The main focus will be to replicate \cite{dippl} and extend Metropolis-Hastings to use adaptive inference parameters. To ensure that the convergence properties still hold, the adaptation will diminish over time.
-
-I will use a prior on the latent structure which encodes rectangles of random sizes, orientations, colors, and opacities. The negative log likelihood of a sample will be the $\ell_1$ norm of the difference between the observed image and the image corresponding to the latent parameters. The transition distribution will be a Guassian with an adaptive standard deviation.
+I will be implementing an online-adaptive MCMC algorithm in order to infer a matching set of rectangles to an observed image. The main focus is replicating \cite{dippl} and extending Metropolis-Hastings to use adaptive inference parameters. To ensure that the convergence properties still hold, the adaptation diminishes over time.
 
 The main results will be to compare Metropolis-Hastings both with and without adaptive parameters on a set of images.
 
 \end{abstract}
+
+\section{Introduction}
+Metropolis-Hastings\cite{metropolis,hastings} is an Markov Chain Monte Carlo algorithm whose stationary distribution forms the target distribution. However, the choice of proposal distribution greatly affects the convergence rate from the initial distribution to the target distribution.
+
+Let $X_n$ be the $n$\th sample and $Y_n$ be the $n$\th proposal. A typical proposal distribution is $Y_{n+1}=X_{n}+Z_{n+1}$, where the increments $\{Z_n\}$ are independently drawn from an identical multidimensional Gaussian with some fixed covariance matrix $\Sigma$.
+
+In this paper, I demonstrate an adaptive version of Metropolis-Hastings where the proposal distribution is parameterized by $\alpha$ such that the covariance matrix used for determining $Y_n$ is $\alpha_n\Sigma$. The basic idea is to increase $\alpha$ when a proposal is accepted and decrease $\alpha$ when a proposal is rejected such that the acceptance rate is reasonable. Roberts et al.\ \cite{roberts} showed that the optimal acceptance rate for Metropolis Hastings is 0.44 for $d=1$ and 0.234 as $d\to\infty$. I target this 0.234 rate.
+
+Finally, to ensure that the stationary distribution still converges to the target distribution, we reduce the adaption over time, and eventually fix it.
+
+\section{Approach}
+
+\section{Proof of Convergence}
+
+\section{Results}
+
+I use a prior on the latent structure which encodes rectangles of random sizes, orientations, colors, and opacities. The negative log likelihood of a sample is the $\ell_1$ norm of the difference between the observed image and the image corresponding to the latent parameters. The transition distribution is a Guassian with an adaptive standard deviation.
+
+\section{Conclusion}
 
 \begin{figure}[h]
 	\centering
