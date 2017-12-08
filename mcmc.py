@@ -19,7 +19,7 @@ class MetropolisHastings(object):
 		self.accepted = 0
 		self.rejected = 0
 
-	def accept(self, x):
+	def accept(self, x, burnin):
 		if self.use_log:
 			alpha = math.exp(self.p(x) - self.p(self.x))
 		else:
@@ -41,13 +41,13 @@ class MetropolisHastings(object):
 			sigma = self.sigma
 		return np.random.normal(loc=x, scale=sigma)
 
-	def sample(self, index=None):
+	def sample(self, index=None, burnin=True):
 		if isinstance(self.x, list) and index is not None:
 			x = copy.deepcopy(self.x)
 			x[index] = self.q(self.x[index])
 		else:
 			x = self.q(self.x)
-		self.accept(x)
+		self.accept(x, burnin=burnin)
 		return self.x
 
 	def acceptance_rate(self):
@@ -61,8 +61,8 @@ class AdaptiveMetropolisHastings(MetropolisHastings):
 		self.factor = 1
 		self.factor_halflife = halflife
 
-	def accept(self, x):
-		val = super().accept(x)
+	def accept(self, x, burnin):
+		val = super().accept(x, burnin=burnin)
 		if val:
 			self.sigma_scale *= math.exp((1 - self.target_acceptance) * self.factor)
 			if isinstance(self.sigma, list):
@@ -85,10 +85,10 @@ def visualize(cls, p, x0, n, sigma=None, f_range=None, burnin=1000, num_bins=20,
 	else:
 		mcmc = cls(p, x0, sigma=sigma)
 	for i in range(burnin):
-		mcmc.sample()
+		mcmc.sample(burnin=True)
 	samples = []
 	for i in range(n):
-		samples.append(mcmc.sample())
+		samples.append(mcmc.sample(burnin=False))
 	plt.figure(figsize=(5,3))
 	plt.hist(samples, bins=num_bins, normed=1, alpha=0.5)
 	plt.xlabel('$x$')

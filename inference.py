@@ -11,11 +11,11 @@ def infer(mcmc_cls, model, n, show_interval=500, burnin=0, sigma_scale=1, saveas
 		show_interval = n
 	sigma = [sigma_scale*dim for dim in model.dim_scale()]
 	mcmc = mcmc_cls(model.log_p, model.x0(), sigma=sigma, use_log=True)
-	# for i in range(burnin):
-		# mcmc.sample()
+	for i in range(burnin):
+		mcmc.sample(index=random.randrange(model.n), burnin=True)
 	samples = []
 	for i in range(n):
-		samples.append(mcmc.sample(index=random.randrange(model.n)))
+		samples.append(mcmc.sample(index=random.randrange(model.n), burnin=False))
 		if len(samples) % show_interval == 0:
 			print('steps:', len(samples), 'a:', mcmc.acceptance_rate(), 'sigma:', sigma_scale*mcmc.sigma_scale, 'd:', model.distance(samples[-1])[0])
 			image, penalty = model.make_image(samples[-1])
@@ -57,4 +57,5 @@ if __name__ == '__main__':
 		assert image is not None
 		model = RectangleFit(8, image)
 		infer(AdaptiveMetropolisHastings, model, n=5000, sigma_scale=0.05, saveas=image_name+'_adaptive')
-		infer(MetropolisHastings, model, n=5000, sigma_scale=0.05, saveas=image_name)
+		infer(MetropolisHastings, model, n=5000, sigma_scale=0.05, saveas=image_name+'_05')
+		# infer(MetropolisHastings, model, n=5000, sigma_scale=0.25, saveas=image_name+'_25')
