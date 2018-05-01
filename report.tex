@@ -1,4 +1,4 @@
-\documentclass{article}
+\documentclass[11pt]{article}
 \usepackage{../../pset}
 
 \lhead{}
@@ -27,6 +27,8 @@ Let $X_n$ be the $n$\th sample and $Y_n$ be the $n$\th proposal. A typical propo
 In this paper, I demonstrate an adaptive version of Metropolis-Hastings where the proposal distribution is parameterized by $\alpha$ such that the covariance matrix used for determining $Y_n$ is $\alpha_n\Sigma$. The basic idea is to increase $\alpha$ when a proposal is accepted and decrease $\alpha$ when a proposal is rejected such that the acceptance rate is reasonable. Roberts et al.\ \cite{roberts} showed that the optimal acceptance rate for Metropolis Hastings is 0.44 for $d=1$ and 0.234 as $d\to\infty$. I target this $r=0.234$ rate.
 
 Finally, to ensure that the stationary distribution still converges to the target distribution, the adaption is reduced over time, and is eventually fixed.
+
+All code is available at \url{https://github.com/bshimanuki/6.804}.
 
 \section{Approach}
 The proposal distribution needs to be scaled because when $\alpha\Sigma$ is too small, the samples move slowly through the sample space, and when $\alpha\Sigma$ is too big, nearly all of the proposals will be rejected.
